@@ -66,6 +66,8 @@ class OptionsMenuState extends MusicBeatState
 					['Downscroll', getFromOption],
 					['Centered Notefield', getFromOption],
 					['Ghost Tapping', getFromOption],
+					['Gameplay Type', getFromOption],
+					['Icon Beat Type', getFromOption],
 					['', null],
 					['Text Settings', null],
 					['', null],
