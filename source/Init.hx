@@ -151,7 +151,7 @@ class Init extends FlxState
 			'Choose a icon beat type for icon beat game.',
 			NOT_FORCED,
 			''
-		]
+		],
 		"Opaque Arrows" => [
 			false,
 			Checkmark,
