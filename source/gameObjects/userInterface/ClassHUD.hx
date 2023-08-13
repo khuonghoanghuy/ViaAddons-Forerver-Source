@@ -52,7 +52,7 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 
 	var infoDisplay:String = CoolUtil.dashToSpace(PlayState.SONG.song);
 	var diffDisplay:String = CoolUtil.difficultyFromNumber(PlayState.storyDifficulty);
-	var engineDisplay:String = "FOREVER ENGINE v" + Main.gameVersion;
+	var engineDisplay:String = "VIA-ADDONS FOREVER v" + Main.gameVersion;
 
 	// eep
 	public function new()
@@ -165,7 +165,7 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 		// iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.initialWidth, iconP1.width, iconLerp)));
 		// iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.initialWidth, iconP2.width, iconLerp)));
 
-		var iconBeatType = Init.trueSetting.get('Icon Beat Type');
+		var iconBeatType = Init.trueSettings.get('Icon Beat');
 
 		// the new way of scaling the icons lmao
 		switch (iconBeatType)
@@ -179,8 +179,11 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.50)));
 
 			case 'base-fixed':
-				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.50)));
-				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.50)));
+				var mult:Float = FlxMath.lerp(1, iconP1.scale.x, CoolUtil.boundTo(1 - (elapsed * 9), 0, 1));
+				iconP1.scale.set(mult, mult);
+
+				var mult:Float = FlxMath.lerp(1, iconP2.scale.x, CoolUtil.boundTo(1 - (elapsed * 9), 0, 1));
+				iconP2.scale.set(mult, mult);
 		}
 
 		iconP1.updateHitbox();
@@ -239,10 +242,20 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 
 	public function beatHit()
 	{
+		var gameplayStyle = Init.trueSettings.get('Gameplay');
+
 		if (!Init.trueSettings.get('Reduced Movements'))
 		{
-			iconP1.setGraphicSize(Std.int(iconP1.width + 30));
-			iconP2.setGraphicSize(Std.int(iconP2.width + 30));
+			if (gameplayStyle == 'psych engine')
+			{
+				iconP1.scale.set(1.3, 1.2);
+				iconP2.scale.set(1.3, 1.2);
+			}
+			else
+			{
+				iconP1.setGraphicSize(Std.int(iconP1.width + 30));
+				iconP2.setGraphicSize(Std.int(iconP2.width + 30));
+			}
 
 			iconP1.updateHitbox();
 			iconP2.updateHitbox();

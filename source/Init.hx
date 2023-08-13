@@ -137,20 +137,20 @@ class Init extends FlxState
 			''
 		],
 		"Note Skin" => ['default', Selector, 'Choose a note skin.', NOT_FORCED, ''],
-		"Framerate Cap" => [360, Selector, 'Define your maximum FPS.', NOT_FORCED, ['']],
-		"Gameplay Type" => [
+		"Framerate Cap" => [120, Selector, 'Define your maximum FPS.', NOT_FORCED, ['']],
+		"Gameplay" => [
 			'default',
 			Selector,
 			'Choose a gameplay type for postion of score text, etc.',
 			NOT_FORCED,
-			''
+			['default', 'base', 'psych engine', 'kade engine', 'fps plus']
 		],
-		"Icon Beat Type" => [
+		"Icon Beat" => [
 			'default',
 			Selector,
 			'Choose a icon beat type for icon beat game.',
 			NOT_FORCED,
-			''
+			['default', 'base', 'base fixed']
 		],
 		"Opaque Arrows" => [
 			false,
