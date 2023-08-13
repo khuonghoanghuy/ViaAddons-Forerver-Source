@@ -85,12 +85,45 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 		iconP2.y = healthBar.y - (iconP2.height / 2);
 		add(iconP2);
 
-		scoreBar = new FlxText(FlxG.width / 2, Math.floor(healthBarBG.y + 40), 0, scoreDisplay);
-		scoreBar.setFormat(Paths.font('vcr.ttf'), 18, FlxColor.WHITE);
-		scoreBar.setBorderStyle(OUTLINE, FlxColor.BLACK, 1.5);
+		var gameplayType = Init.trueSettings.get('Gameplay');
+
+		switch (gameplayType)
+		{
+			case "default":
+				scoreBar = new FlxText(FlxG.width / 2, Math.floor(healthBarBG.y + 40), 0, scoreDisplay);
+				scoreBar.setFormat(Paths.font('vcr.ttf'), 18, FlxColor.WHITE);
+				scoreBar.setBorderStyle(OUTLINE, FlxColor.BLACK, 1.5);
+				scoreBar.antialiasing = true;
+
+			case 'base':
+				scoreBar = new FlxText(healthBarBG.x + healthBarBG.width - 190, healthBarBG.y + 30, 0, "", 20);
+				scoreBar.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT);
+				scoreBar.scrollFactor.set();
+
+			case 'psych engine':
+				scoreBar = new FlxText(0, healthBarBG.y + 36, FlxG.width, "", 20);
+				scoreBar.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+				scoreBar.scrollFactor.set();
+				scoreBar.borderSize = 1.25;
+
+			case 'kade engine':
+				scoreBar = new FlxText(FlxG.width / 2 - 235, healthBarBG.y + 50, 0, "", 20);
+				scoreBar.screenCenter(X);
+				scoreBar.scrollFactor.set();
+				scoreBar.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+
+			case 'fps plus':
+				scoreBar = new FlxText(healthBarBG.x - 105, (FlxG.height * 0.9) + 36, 800, "", 22);
+				scoreBar.setFormat(Paths.font("vcr.tff"), 22, FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+				scoreBar.scrollFactor.set();
+
+			default:
+				scoreBar = new FlxText(FlxG.width / 2, Math.floor(healthBarBG.y + 40), 0, scoreDisplay);
+				scoreBar.setFormat(Paths.font('vcr.ttf'), 18, FlxColor.WHITE);
+				scoreBar.setBorderStyle(OUTLINE, FlxColor.BLACK, 1.5);
+				scoreBar.antialiasing = true;
+		}
 		updateScoreText();
-		// scoreBar.scrollFactor.set();
-		scoreBar.antialiasing = true;
 		add(scoreBar);
 
 		cornerMark = new FlxText(0, 0, 0, engineDisplay);
@@ -175,15 +208,8 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 				iconP2.scale.set(FlxMath.lerp(1, iconP2.scale.x, iconLerp), FlxMath.lerp(1, iconP2.scale.y, iconLerp));
 
 			case 'base':
-				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.50)));
-				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.50)));
-
-			case 'base-fixed':
-				var mult:Float = FlxMath.lerp(1, iconP1.scale.x, CoolUtil.boundTo(1 - (elapsed * 9), 0, 1));
-				iconP1.scale.set(mult, mult);
-
-				var mult:Float = FlxMath.lerp(1, iconP2.scale.x, CoolUtil.boundTo(1 - (elapsed * 9), 0, 1));
-				iconP2.scale.set(mult, mult);
+				iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.85 / Init.trueSettings.get('Framerate Cap'))));
+				iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.85 / Init.trueSettings.get('Framerate Cap'))));
 		}
 
 		iconP1.updateHitbox();
@@ -213,17 +239,32 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 		var importMisses = PlayState.misses;
 		var comboDisplay:String = (Timings.comboDisplay != null && Timings.comboDisplay != '' ? ' [${Timings.comboDisplay}]' : '');
 
-		scoreBar.text = 'Score: $importSongScore';
-		// testing purposes
+		var gameplayType = Init.trueSettings.get('Gameplay');
 		var displayAccuracy:Bool = Init.trueSettings.get('Display Accuracy');
-		if (displayAccuracy)
+
+		scoreBar.text = 'Score: $importSongScore';
+
+		switch (gameplayType)
 		{
-			scoreBar.text += divider + 'Accuracy: ' + Std.string(Math.floor(Timings.getAccuracy() * 100) / 100) + '%' + comboDisplay;
-			scoreBar.text += divider + 'Combo Breaks: ' + Std.string(PlayState.misses);
-			scoreBar.text += divider + 'Rank: ' + Std.string(Timings.returnScoreRating().toUpperCase());
+			case 'base' | 'fps plus' | 'psych engine' | 'kade engine':
+				if (displayAccuracy)
+				{
+					scoreBar.text += ' - Misses: ' + Std.string(PlayState.misses);
+					scoreBar.text += ' - Accuracy: ' + Std.string(Math.floor(Timings.getAccuracy() * 100) / 100) + '%';
+				}
+
+			default:
+				// testing purposes
+
+				if (displayAccuracy)
+				{
+					scoreBar.text += divider + 'Accuracy: ' + Std.string(Math.floor(Timings.getAccuracy() * 100) / 100) + '%' + comboDisplay;
+					scoreBar.text += divider + 'Combo Breaks: ' + Std.string(PlayState.misses);
+					scoreBar.text += divider + 'Rank: ' + Std.string(Timings.returnScoreRating().toUpperCase());
+				}
+				scoreBar.text += '\n';
+				scoreBar.x = Math.floor((FlxG.width / 2) - (scoreBar.width / 2));
 		}
-		scoreBar.text += '\n';
-		scoreBar.x = Math.floor((FlxG.width / 2) - (scoreBar.width / 2));
 
 		// update counter
 		if (Init.trueSettings.get('Counter') != 'None')

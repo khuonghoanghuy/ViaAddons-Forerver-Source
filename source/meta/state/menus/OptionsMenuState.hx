@@ -107,6 +107,10 @@ class OptionsMenuState extends MusicBeatState
 					['Disable Antialiasing', getFromOption],
 					["Stage Opacity", getFromOption],
 					['Reduced Movements', getFromOption],
+					['', null],
+					['Trace Setting', null],
+					['', null],
+					['Log Trace Resync', getFromOption],
 				]
 			]
 		];

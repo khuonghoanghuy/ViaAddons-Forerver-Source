@@ -150,7 +150,7 @@ class Init extends FlxState
 			Selector,
 			'Choose a icon beat type for icon beat game.',
 			NOT_FORCED,
-			['default', 'base', 'base fixed']
+			['default', 'base']
 		],
 		"Opaque Arrows" => [
 			false,
@@ -191,6 +191,7 @@ class Init extends FlxState
 			"Simplifies the judgement animations, displaying only one judgement / rating sprite at a time.",
 			NOT_FORCED
 		],
+		'Log Trace Resync' => [false, Checkmark, "Disable Log trace when resync music.", NOT_FORCED],
 	];
 
 	public static var trueSettings:Map<String, Dynamic> = [];
@@ -297,7 +298,7 @@ class Init extends FlxState
 		// lemme fix that for you
 		if (!Std.isOfType(trueSettings.get("Framerate Cap"), Int)
 			|| trueSettings.get("Framerate Cap") < 30
-			|| trueSettings.get("Framerate Cap") > 360)
+			|| trueSettings.get("Framerate Cap") > 480)
 			trueSettings.set("Framerate Cap", 30);
 
 		if (!Std.isOfType(trueSettings.get("Stage Opacity"), Int)
